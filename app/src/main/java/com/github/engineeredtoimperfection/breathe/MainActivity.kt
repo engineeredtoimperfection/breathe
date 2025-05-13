@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.unit.sp
 import com.github.engineeredtoimperfection.breathe.ui.theme.BreatheTheme
@@ -38,9 +40,9 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     val infiniteTransition = rememberInfiniteTransition()
-                    val fontSize by infiniteTransition.animateFloat(
-                        initialValue = 24F,
-                        targetValue = 36F,
+                    val scale by infiniteTransition.animateFloat(
+                        initialValue = 1F,
+                        targetValue = 2F,
                         animationSpec = infiniteRepeatable(
                             animation = tween(durationMillis = 4000, easing = LinearEasing),
                             repeatMode = RepeatMode.Reverse
@@ -52,8 +54,14 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()) {
                         Text(
                             text = "Breathe.",
-                            modifier = Modifier.align(Alignment.Center),
-                            fontSize = fontSize.sp,
+                            modifier = Modifier
+                                .graphicsLayer {
+                                    scaleX = scale
+                                    scaleY = scale
+                                    transformOrigin = TransformOrigin.Center
+                                }
+                                .align(Alignment.Center),
+                            fontSize = 24.sp,
                             style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
                         )
                     }
