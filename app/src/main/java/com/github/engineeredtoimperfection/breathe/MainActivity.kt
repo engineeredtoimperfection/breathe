@@ -53,7 +53,8 @@ class MainActivity : ComponentActivity() {
                         Text(
                             text = "Breathe.",
                             modifier = Modifier.align(Alignment.Center),
-                            fontSize = fontSize.sp
+                            fontSize = fontSize.sp,
+                            style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
                         )
                     }
                 }
