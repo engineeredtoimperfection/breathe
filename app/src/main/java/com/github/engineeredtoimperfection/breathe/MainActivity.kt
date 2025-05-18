@@ -19,10 +19,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
@@ -49,9 +53,15 @@ class MainActivity : ComponentActivity() {
                         )
                     )
 
+                    var isModeExplore by remember { mutableStateOf(false) }
+
                     Box(modifier = Modifier
                         .padding(innerPadding)
-                        .fillMaxSize()) {
+                        .fillMaxSize()
+                        .toggleable(isModeExplore) {
+                            isModeExplore = !isModeExplore
+                        }
+                    ) {
                         Text(
                             text = "Breathe.",
                             modifier = Modifier
@@ -63,6 +73,15 @@ class MainActivity : ComponentActivity() {
                                 .align(Alignment.Center),
                             fontSize = 24.sp,
                             style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
+                        )
+
+                        Text(
+                            text =
+                                if (isModeExplore)
+                                    "Explore Mode"
+                                else
+                                    "Breathe Mode",
+                            modifier = Modifier.align(Alignment.BottomCenter)
                         )
                     }
                 }
