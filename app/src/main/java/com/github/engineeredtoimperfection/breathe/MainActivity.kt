@@ -71,9 +71,6 @@ class MainActivity : ComponentActivity() {
                     Box(modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
-                        .toggleable(isModeExplore) {
-                            isModeExplore = !isModeExplore
-                        }
                     ) {
                         Text(
                             text = "Breathe.",
@@ -83,7 +80,10 @@ class MainActivity : ComponentActivity() {
                                     scaleY = scale
                                     transformOrigin = TransformOrigin.Center
                                 }
-                                .align(Alignment.Center),
+                                .align(Alignment.Center)
+                                .toggleable(isModeExplore) {
+                                    isModeExplore = !isModeExplore
+                                },
                             fontSize = 24.sp,
                             style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
                         )
