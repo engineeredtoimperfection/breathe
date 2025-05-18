@@ -16,6 +16,7 @@ import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -81,7 +82,11 @@ class MainActivity : ComponentActivity() {
                                     transformOrigin = TransformOrigin.Center
                                 }
                                 .align(Alignment.Center)
-                                .toggleable(isModeExplore) {
+                                .toggleable(
+                                    value = isModeExplore,
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) {
                                     isModeExplore = !isModeExplore
                                 },
                             fontSize = 24.sp,
