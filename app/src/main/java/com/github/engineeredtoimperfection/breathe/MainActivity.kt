@@ -5,15 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -29,8 +23,6 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -70,9 +62,10 @@ class MainActivity : ComponentActivity() {
 
                     var isModeExplore by remember { mutableStateOf(false) }
 
-                    Box(modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                    Box(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize()
                     ) {
                         Text(
                             text = "Breathe.",
@@ -94,7 +87,10 @@ class MainActivity : ComponentActivity() {
                             style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
                         )
 
-                        AnimatedContent(targetState = isModeExplore, modifier = Modifier.align(Alignment.BottomCenter)) { modeState ->
+                        AnimatedContent(
+                            targetState = isModeExplore,
+                            modifier = Modifier.align(Alignment.BottomCenter)
+                        ) { modeState ->
                             Text(
                                 text =
                                     if (modeState)
@@ -117,7 +113,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BoxScope.ExploreMode(modifier: Modifier = Modifier) {
 
-    Row(modifier = modifier.align(Alignment.Center).fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+    Row(
+        modifier = modifier
+            .align(Alignment.Center)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         IconButton(onClick = {}) {
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Left Arrow")
         }
