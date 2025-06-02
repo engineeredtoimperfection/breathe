@@ -11,6 +11,11 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -89,7 +94,11 @@ class MainActivity : ComponentActivity() {
 
                         AnimatedContent(
                             targetState = isModeExplore,
-                            modifier = Modifier.align(Alignment.BottomCenter)
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            transitionSpec = {
+                                slideInVertically { fullHeight -> fullHeight } + fadeIn() togetherWith
+                                        slideOutVertically { fullHeight -> fullHeight } + fadeOut()
+                            }
                         ) { modeState ->
                             Text(
                                 text =
