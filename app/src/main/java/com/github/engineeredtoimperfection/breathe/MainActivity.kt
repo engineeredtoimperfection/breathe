@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -93,14 +94,15 @@ class MainActivity : ComponentActivity() {
                             style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
                         )
 
-                        Text(
-                            text =
-                                if (isModeExplore)
-                                    "Explore Mode"
-                                else
-                                    "Breathe Mode",
-                            modifier = Modifier.align(Alignment.BottomCenter)
-                        )
+                        AnimatedContent(targetState = isModeExplore, modifier = Modifier.align(Alignment.BottomCenter)) { modeState ->
+                            Text(
+                                text =
+                                    if (modeState)
+                                        "Explore Mode"
+                                    else
+                                        "Breathe Mode"
+                            )
+                        }
 
                         if (isModeExplore) {
                             ExploreMode()
