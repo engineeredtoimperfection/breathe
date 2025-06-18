@@ -179,7 +179,7 @@ fun GlowyText(
     val bottomRightShadow = glowyTextShadow.copy(offset = bottomRightOffset)
     val bottomLeftShadow = glowyTextShadow.copy(offset = bottomLeftOffset)
 
-    val glowyTextStyle = LocalTextStyle.current.copy(
+    val glowyTextStyle = LocalTextStyle.current.merge(
         textMotion = textMotion, shadow = glowyTextShadow
     )
 
