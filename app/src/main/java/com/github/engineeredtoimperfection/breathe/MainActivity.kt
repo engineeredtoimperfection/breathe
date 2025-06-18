@@ -102,6 +102,7 @@ class MainActivity : ComponentActivity() {
                             glowColor = Purple40,
                             offset = 4f,
                             blurRadius = 4f,
+                            textMotion = TextMotion.Animated,
                             toggleOnTap = Modifier::toggleExploreMode,
                         )
 
@@ -159,6 +160,7 @@ fun GlowyText(
     glowColor: Color,
     offset: Float,
     blurRadius: Float,
+    textMotion: TextMotion?,
     toggleOnTap: Modifier.() -> Modifier
 ) {
     Text(
@@ -166,7 +168,7 @@ fun GlowyText(
         modifier = modifier,
         fontSize = fontSize,
         style = LocalTextStyle.current.copy(
-            textMotion = TextMotion.Animated, shadow = Shadow(
+            textMotion = textMotion, shadow = Shadow(
                 color = glowColor,
                 offset = Offset(-1 * offset, -1 * offset),
                 blurRadius = blurRadius
@@ -178,7 +180,7 @@ fun GlowyText(
         modifier = modifier,
         fontSize = fontSize,
         style = LocalTextStyle.current.copy(
-            textMotion = TextMotion.Animated, shadow = Shadow(
+            textMotion = textMotion, shadow = Shadow(
                 color = glowColor,
                 offset = Offset(-1 * offset, offset),
                 blurRadius = blurRadius
@@ -190,7 +192,7 @@ fun GlowyText(
         modifier = modifier,
         fontSize = fontSize,
         style = LocalTextStyle.current.copy(
-            textMotion = TextMotion.Animated, shadow = Shadow(
+            textMotion = textMotion, shadow = Shadow(
                 color = glowColor,
                 offset = Offset(offset, -1 * offset),
                 blurRadius = blurRadius
@@ -203,7 +205,7 @@ fun GlowyText(
             .toggleOnTap(),
         fontSize = fontSize,
         style = LocalTextStyle.current.copy(
-            textMotion = TextMotion.Animated, shadow = Shadow(
+            textMotion = textMotion, shadow = Shadow(
                 color = glowColor,
                 offset = Offset(offset, offset),
                 blurRadius = blurRadius
