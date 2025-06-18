@@ -163,53 +163,52 @@ fun GlowyText(
     textMotion: TextMotion?,
     toggleOnTap: Modifier.() -> Modifier
 ) {
+
+    val topLeftOffset = Offset(x = -1 * offset, y = -1 * offset)
+    val topRightOffset = Offset(x = 1 * offset, y = -1 * offset)
+    val bottomLeftOffset = Offset(x = -1 * offset, y = 1 * offset)
+    val bottomRightOffset = Offset(x = 1 * offset, y = 1 * offset)
+
+    val glowyTextShadow = Shadow(
+        color = glowColor,
+        blurRadius = blurRadius
+    )
+
+    val topLeftShadow = glowyTextShadow.copy(offset = topLeftOffset)
+    val topRightShadow = glowyTextShadow.copy(offset = topRightOffset)
+    val bottomRightShadow = glowyTextShadow.copy(offset = bottomRightOffset)
+    val bottomLeftShadow = glowyTextShadow.copy(offset = bottomLeftOffset)
+
+    val glowyTextStyle = LocalTextStyle.current.copy(
+        textMotion = textMotion, shadow = glowyTextShadow
+    )
+
     Text(
         text = text,
         modifier = modifier,
         fontSize = fontSize,
-        style = LocalTextStyle.current.copy(
-            textMotion = textMotion, shadow = Shadow(
-                color = glowColor,
-                offset = Offset(-1 * offset, -1 * offset),
-                blurRadius = blurRadius
-            )
-        )
+        style = glowyTextStyle.copy(shadow = topLeftShadow)
     )
+
     Text(
         text = text,
         modifier = modifier,
         fontSize = fontSize,
-        style = LocalTextStyle.current.copy(
-            textMotion = textMotion, shadow = Shadow(
-                color = glowColor,
-                offset = Offset(-1 * offset, offset),
-                blurRadius = blurRadius
-            )
-        )
+        style = glowyTextStyle.copy(shadow = topRightShadow)
     )
+
     Text(
         text = text,
         modifier = modifier,
         fontSize = fontSize,
-        style = LocalTextStyle.current.copy(
-            textMotion = textMotion, shadow = Shadow(
-                color = glowColor,
-                offset = Offset(offset, -1 * offset),
-                blurRadius = blurRadius
-            )
-        )
+        style = glowyTextStyle.copy(shadow = bottomRightShadow)
     )
+
     Text(
         text = text,
         modifier = modifier
             .toggleOnTap(),
         fontSize = fontSize,
-        style = LocalTextStyle.current.copy(
-            textMotion = textMotion, shadow = Shadow(
-                color = glowColor,
-                offset = Offset(offset, offset),
-                blurRadius = blurRadius
-            )
-        )
+        style = glowyTextStyle.copy(shadow = bottomLeftShadow)
     )
 }
