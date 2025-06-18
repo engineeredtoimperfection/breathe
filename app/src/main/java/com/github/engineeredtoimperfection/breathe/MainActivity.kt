@@ -92,62 +92,10 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
-                        Text(
+                        GlowyText(
+                            modifier = Modifier.scaleTransform().align(Alignment.Center),
                             text = "Breathe.",
-                            modifier = Modifier
-                                .scaleTransform()
-                                .align(Alignment.Center),
-                            fontSize = 24.sp,
-                            style = LocalTextStyle.current.copy(
-                                textMotion = TextMotion.Animated, shadow = Shadow(
-                                    color = Purple40,
-                                    offset = Offset(-4f, -4f),
-                                    blurRadius = 4f
-                                )
-                            )
-                        )
-                        Text(
-                            text = "Breathe.",
-                            modifier = Modifier
-                                .scaleTransform()
-                                .align(Alignment.Center),
-                            fontSize = 24.sp,
-                            style = LocalTextStyle.current.copy(
-                                textMotion = TextMotion.Animated, shadow = Shadow(
-                                    color = Purple40,
-                                    offset = Offset(-4f, 4f),
-                                    blurRadius = 4f
-                                )
-                            )
-                        )
-                        Text(
-                            text = "Breathe.",
-                            modifier = Modifier
-                                .scaleTransform()
-                                .align(Alignment.Center),
-                            fontSize = 24.sp,
-                            style = LocalTextStyle.current.copy(
-                                textMotion = TextMotion.Animated, shadow = Shadow(
-                                    color = Purple40,
-                                    offset = Offset(4f, -4f),
-                                    blurRadius = 4f
-                                )
-                            )
-                        )
-                        Text(
-                            text = "Breathe.",
-                            modifier = Modifier
-                                .scaleTransform()
-                                .align(Alignment.Center)
-                                .toggleExploreMode(),
-                            fontSize = 24.sp,
-                            style = LocalTextStyle.current.copy(
-                                textMotion = TextMotion.Animated, shadow = Shadow(
-                                    color = Purple40,
-                                    offset = Offset(4f, 4f),
-                                    blurRadius = 4f
-                                )
-                            )
+                            toggleOnTap = Modifier::toggleExploreMode,
                         )
 
                         AnimatedContent(
@@ -194,4 +142,57 @@ fun BoxScope.ExploreMode(modifier: Modifier = Modifier) {
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Right Arrow")
         }
     }
+}
+
+@Composable
+fun GlowyText(modifier: Modifier = Modifier, text: String, toggleOnTap: Modifier.() -> Modifier) {
+    Text(
+        text = text,
+        modifier = modifier,
+        fontSize = 24.sp,
+        style = LocalTextStyle.current.copy(
+            textMotion = TextMotion.Animated, shadow = Shadow(
+                color = Purple40,
+                offset = Offset(-4f, -4f),
+                blurRadius = 4f
+            )
+        )
+    )
+    Text(
+        text = text,
+        modifier = modifier,
+        fontSize = 24.sp,
+        style = LocalTextStyle.current.copy(
+            textMotion = TextMotion.Animated, shadow = Shadow(
+                color = Purple40,
+                offset = Offset(-4f, 4f),
+                blurRadius = 4f
+            )
+        )
+    )
+    Text(
+        text = text,
+        modifier = modifier,
+        fontSize = 24.sp,
+        style = LocalTextStyle.current.copy(
+            textMotion = TextMotion.Animated, shadow = Shadow(
+                color = Purple40,
+                offset = Offset(4f, -4f),
+                blurRadius = 4f
+            )
+        )
+    )
+    Text(
+        text = text,
+        modifier = modifier
+            .toggleOnTap(),
+        fontSize = 24.sp,
+        style = LocalTextStyle.current.copy(
+            textMotion = TextMotion.Animated, shadow = Shadow(
+                color = Purple40,
+                offset = Offset(4f, 4f),
+                blurRadius = 4f
+            )
+        )
+    )
 }
