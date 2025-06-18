@@ -67,6 +67,22 @@ class MainActivity : ComponentActivity() {
 
                     var isModeExplore by remember { mutableStateOf(false) }
 
+                    fun Modifier.scaleTransform() = this.graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        transformOrigin = TransformOrigin.Center
+                    }
+
+                    val interactionSource = remember { MutableInteractionSource() }
+
+                    fun Modifier.toggleExploreMode() = this.toggleable(
+                        value = isModeExplore,
+                        indication = null,
+                        interactionSource = interactionSource,
+                    ) {
+                        isModeExplore = !isModeExplore
+                    }
+
                     Box(
                         modifier = Modifier
                             .padding(innerPadding)
@@ -75,19 +91,9 @@ class MainActivity : ComponentActivity() {
                         Text(
                             text = "Breathe.",
                             modifier = Modifier
-                                .graphicsLayer {
-                                    scaleX = scale
-                                    scaleY = scale
-                                    transformOrigin = TransformOrigin.Center
-                                }
+                                .scaleTransform()
                                 .align(Alignment.Center)
-                                .toggleable(
-                                    value = isModeExplore,
-                                    indication = null,
-                                    interactionSource = remember { MutableInteractionSource() }
-                                ) {
-                                    isModeExplore = !isModeExplore
-                                },
+                                .toggleExploreMode(),
                             fontSize = 24.sp,
                             style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
                         )
