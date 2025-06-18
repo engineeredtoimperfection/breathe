@@ -31,7 +31,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,10 +41,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextMotion
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.engineeredtoimperfection.breathe.ui.theme.BreatheTheme
@@ -93,8 +94,14 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                     ) {
                         GlowyText(
-                            modifier = Modifier.scaleTransform().align(Alignment.Center),
+                            modifier = Modifier
+                                .scaleTransform()
+                                .align(Alignment.Center),
                             text = "Breathe.",
+                            fontSize = 24.sp,
+                            glowColor = Purple40,
+                            offset = 4f,
+                            blurRadius = 4f,
                             toggleOnTap = Modifier::toggleExploreMode,
                         )
 
@@ -145,40 +152,48 @@ fun BoxScope.ExploreMode(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun GlowyText(modifier: Modifier = Modifier, text: String, toggleOnTap: Modifier.() -> Modifier) {
+fun GlowyText(
+    modifier: Modifier = Modifier,
+    text: String,
+    fontSize: TextUnit,
+    glowColor: Color,
+    offset: Float,
+    blurRadius: Float,
+    toggleOnTap: Modifier.() -> Modifier
+) {
     Text(
         text = text,
         modifier = modifier,
-        fontSize = 24.sp,
+        fontSize = fontSize,
         style = LocalTextStyle.current.copy(
             textMotion = TextMotion.Animated, shadow = Shadow(
-                color = Purple40,
-                offset = Offset(-4f, -4f),
-                blurRadius = 4f
+                color = glowColor,
+                offset = Offset(-1 * offset, -1 * offset),
+                blurRadius = blurRadius
             )
         )
     )
     Text(
         text = text,
         modifier = modifier,
-        fontSize = 24.sp,
+        fontSize = fontSize,
         style = LocalTextStyle.current.copy(
             textMotion = TextMotion.Animated, shadow = Shadow(
-                color = Purple40,
-                offset = Offset(-4f, 4f),
-                blurRadius = 4f
+                color = glowColor,
+                offset = Offset(-1 * offset, offset),
+                blurRadius = blurRadius
             )
         )
     )
     Text(
         text = text,
         modifier = modifier,
-        fontSize = 24.sp,
+        fontSize = fontSize,
         style = LocalTextStyle.current.copy(
             textMotion = TextMotion.Animated, shadow = Shadow(
-                color = Purple40,
-                offset = Offset(4f, -4f),
-                blurRadius = 4f
+                color = glowColor,
+                offset = Offset(offset, -1 * offset),
+                blurRadius = blurRadius
             )
         )
     )
@@ -186,12 +201,12 @@ fun GlowyText(modifier: Modifier = Modifier, text: String, toggleOnTap: Modifier
         text = text,
         modifier = modifier
             .toggleOnTap(),
-        fontSize = 24.sp,
+        fontSize = fontSize,
         style = LocalTextStyle.current.copy(
             textMotion = TextMotion.Animated, shadow = Shadow(
-                color = Purple40,
-                offset = Offset(4f, 4f),
-                blurRadius = 4f
+                color = glowColor,
+                offset = Offset(offset, offset),
+                blurRadius = blurRadius
             )
         )
     )
