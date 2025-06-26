@@ -14,8 +14,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -122,8 +120,8 @@ class MainActivity : ComponentActivity() {
                             targetState = isModeExplore,
                             modifier = Modifier.align(Alignment.BottomCenter),
                             transitionSpec = {
-                                slideInVertically { fullHeight -> fullHeight } + fadeIn() togetherWith
-                                        slideOutVertically { fullHeight -> fullHeight } + fadeOut()
+                                fadeIn(tween(durationMillis = 1000, delayMillis = 1000)) togetherWith
+                                        fadeOut(tween(durationMillis = 1000))
                             }
                         ) { modeState ->
                             Text(
