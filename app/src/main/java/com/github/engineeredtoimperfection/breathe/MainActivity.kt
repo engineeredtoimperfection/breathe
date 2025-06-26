@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -93,6 +94,15 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
+                        AnimatedVisibility(
+                            visible = isModeExplore,
+                            modifier = Modifier.align(Alignment.TopCenter)
+                        ) {
+                            Text(
+                                text = "Equal Breathing"
+                            )
+                        }
+
                         GlowyText(
                             modifier = Modifier
                                 .scaleTransform()
