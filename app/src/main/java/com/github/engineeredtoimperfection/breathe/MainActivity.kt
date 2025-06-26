@@ -134,7 +134,12 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        if (isModeExplore) {
+                        AnimatedVisibility(
+                            visible = isModeExplore,
+                            modifier = Modifier.align(Alignment.Center),
+                            enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
+                            exit = fadeOut(tween(durationMillis = 1000))
+                        ) {
                             ExploreMode()
                         }
                     }
