@@ -96,7 +96,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         AnimatedVisibility(
                             visible = isModeExplore,
-                            modifier = Modifier.align(Alignment.TopCenter)
+                            modifier = Modifier.align(Alignment.TopCenter),
+                            enter = fadeIn(),
+                            exit = fadeOut()
                         ) {
                             Text(
                                 text = "Equal Breathing"
