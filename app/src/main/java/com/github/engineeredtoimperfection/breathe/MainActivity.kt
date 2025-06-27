@@ -70,6 +70,8 @@ class MainActivity : ComponentActivity() {
 
                     var isModeExplore by remember { mutableStateOf(false) }
 
+                    var breathingTechnique by remember { mutableStateOf(BreathingTechnique.EqualBreathing) }
+
                     fun Modifier.scaleTransform() = this.graphicsLayer {
                         scaleX = scale
                         scaleY = scale
@@ -98,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             exit = fadeOut(tween(durationMillis = 1000))
                         ) {
                             Text(
-                                text = "Equal Breathing"
+                                text = breathingTechnique.name
                             )
                         }
 
@@ -119,7 +121,12 @@ class MainActivity : ComponentActivity() {
                             targetState = isModeExplore,
                             modifier = Modifier.align(Alignment.BottomCenter),
                             transitionSpec = {
-                                fadeIn(tween(durationMillis = 1000, delayMillis = 1000)) togetherWith
+                                fadeIn(
+                                    tween(
+                                        durationMillis = 1000,
+                                        delayMillis = 1000
+                                    )
+                                ) togetherWith
                                         fadeOut(tween(durationMillis = 1000))
                             }
                         ) { modeState ->
