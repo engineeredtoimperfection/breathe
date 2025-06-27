@@ -143,39 +143,47 @@ class MainActivity : ComponentActivity() {
 fun BreathingVisualizer(
     modifier: Modifier = Modifier,
     breathingTechnique: BreathingTechnique,
+    visualizerStyle: VisualizerStyle = VisualizerStyle.GlowyText,
     toggleExploreMode: Modifier.() -> Modifier
 ) {
+    when(visualizerStyle) {
 
-    val infiniteTransition = rememberInfiniteTransition()
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1F,
-        targetValue = 2F,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
+        VisualizerStyle.GlowyText -> {
 
-    fun Modifier.scaleTransform() = this.graphicsLayer {
-        scaleX = scale
-        scaleY = scale
-        transformOrigin = TransformOrigin.Center
+            val infiniteTransition = rememberInfiniteTransition()
+            val scale by infiniteTransition.animateFloat(
+                initialValue = 1F,
+                targetValue = 2F,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(
+                        durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000,
+                        easing = LinearEasing
+                    ),
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
+
+            fun Modifier.scaleTransform() = this.graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+                transformOrigin = TransformOrigin.Center
+            }
+
+            GlowyText(
+                modifier = modifier
+                    .scaleTransform(),
+                text = "Breathe.",
+                fontSize = 24.sp,
+                glowColor = Purple40,
+                offset = 4f,
+                blurRadius = 4f,
+                textMotion = TextMotion.Animated,
+                toggleOnTap = toggleExploreMode,
+            )
+        }
+
+        else -> Text(text = "Visualizer not yet implemented.")
     }
-
-    GlowyText(
-        modifier = modifier
-            .scaleTransform(),
-        text = "Breathe.",
-        fontSize = 24.sp,
-        glowColor = Purple40,
-        offset = 4f,
-        blurRadius = 4f,
-        textMotion = TextMotion.Animated,
-        toggleOnTap = toggleExploreMode,
-    )
 }
 
 @Composable
