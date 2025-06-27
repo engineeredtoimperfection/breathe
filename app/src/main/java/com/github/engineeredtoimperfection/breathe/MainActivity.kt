@@ -59,16 +59,6 @@ class MainActivity : ComponentActivity() {
             BreatheTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
-                    val infiniteTransition = rememberInfiniteTransition()
-                    val scale by infiniteTransition.animateFloat(
-                        initialValue = 1F,
-                        targetValue = 2F,
-                        animationSpec = infiniteRepeatable(
-                            animation = tween(durationMillis = 4000, easing = LinearEasing),
-                            repeatMode = RepeatMode.Reverse
-                        )
-                    )
-
                     var isModeExplore by remember { mutableStateOf(false) }
 
                     var breathingTechnique: BreathingTechnique by remember {
@@ -76,6 +66,16 @@ class MainActivity : ComponentActivity() {
                             BreathingTechnique.EqualBreathing
                         )
                     }
+
+                    val infiniteTransition = rememberInfiniteTransition()
+                    val scale by infiniteTransition.animateFloat(
+                        initialValue = 1F,
+                        targetValue = 2F,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000, easing = LinearEasing),
+                            repeatMode = RepeatMode.Reverse
+                        )
+                    )
 
                     fun Modifier.scaleTransform() = this.graphicsLayer {
                         scaleX = scale
