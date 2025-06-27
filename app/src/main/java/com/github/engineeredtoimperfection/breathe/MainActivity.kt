@@ -15,6 +15,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,7 +71,11 @@ class MainActivity : ComponentActivity() {
 
                     var isModeExplore by remember { mutableStateOf(false) }
 
-                    var breathingTechnique by remember { mutableStateOf(BreathingTechnique.EqualBreathing) }
+                    var breathingTechnique: BreathingTechnique by remember {
+                        mutableStateOf(
+                            BreathingTechnique.EqualBreathing
+                        )
+                    }
 
                     fun Modifier.scaleTransform() = this.graphicsLayer {
                         scaleX = scale
@@ -100,7 +105,10 @@ class MainActivity : ComponentActivity() {
                             exit = fadeOut(tween(durationMillis = 1000))
                         ) {
                             Text(
-                                text = breathingTechnique.name
+                                text = breathingTechnique.name,
+                                modifier = Modifier.clickable {
+                                    breathingTechnique = breathingTechnique.next()
+                                }
                             )
                         }
 
