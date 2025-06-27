@@ -67,22 +67,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    val infiniteTransition = rememberInfiniteTransition()
-                    val scale by infiniteTransition.animateFloat(
-                        initialValue = 1F,
-                        targetValue = 2F,
-                        animationSpec = infiniteRepeatable(
-                            animation = tween(durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000, easing = LinearEasing),
-                            repeatMode = RepeatMode.Reverse
-                        )
-                    )
-
-                    fun Modifier.scaleTransform() = this.graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                        transformOrigin = TransformOrigin.Center
-                    }
-
                     val interactionSource = remember { MutableInteractionSource() }
 
                     fun Modifier.toggleExploreMode() = this.toggleable(
@@ -112,17 +96,10 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        GlowyText(
-                            modifier = Modifier
-                                .scaleTransform()
-                                .align(Alignment.Center),
-                            text = "Breathe.",
-                            fontSize = 24.sp,
-                            glowColor = Purple40,
-                            offset = 4f,
-                            blurRadius = 4f,
-                            textMotion = TextMotion.Animated,
-                            toggleOnTap = Modifier::toggleExploreMode,
+                        BreathingVisualizer(
+                            modifier = Modifier.align(Alignment.Center),
+                            breathingTechnique = breathingTechnique,
+                            toggleExploreMode = Modifier::toggleExploreMode,
                         )
 
                         AnimatedContent(
@@ -160,6 +137,45 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Composable
+fun BreathingVisualizer(
+    modifier: Modifier = Modifier,
+    breathingTechnique: BreathingTechnique,
+    toggleExploreMode: Modifier.() -> Modifier
+) {
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1F,
+        targetValue = 2F,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000,
+                easing = LinearEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    fun Modifier.scaleTransform() = this.graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+        transformOrigin = TransformOrigin.Center
+    }
+
+    GlowyText(
+        modifier = modifier
+            .scaleTransform(),
+        text = "Breathe.",
+        fontSize = 24.sp,
+        glowColor = Purple40,
+        offset = 4f,
+        blurRadius = 4f,
+        textMotion = TextMotion.Animated,
+        toggleOnTap = toggleExploreMode,
+    )
 }
 
 @Composable
