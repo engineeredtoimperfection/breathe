@@ -143,44 +143,16 @@ class MainActivity : ComponentActivity() {
 fun BreathingVisualizer(
     modifier: Modifier = Modifier,
     breathingTechnique: BreathingTechnique,
-    visualizerStyle: VisualizerStyle = VisualizerStyle.GlowyText,
+    visualizerStyle: VisualizerStyle = VisualizerStyle.ExpandingGlowyText,
     toggleExploreMode: Modifier.() -> Modifier
 ) {
-    when(visualizerStyle) {
+    when (visualizerStyle) {
 
-        VisualizerStyle.GlowyText -> {
-
-            val infiniteTransition = rememberInfiniteTransition()
-            val scale by infiniteTransition.animateFloat(
-                initialValue = 1F,
-                targetValue = 2F,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(
-                        durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000,
-                        easing = LinearEasing
-                    ),
-                    repeatMode = RepeatMode.Reverse
-                )
-            )
-
-            fun Modifier.scaleTransform() = this.graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-                transformOrigin = TransformOrigin.Center
-            }
-
-            GlowyText(
-                modifier = modifier
-                    .scaleTransform(),
-                text = "Breathe.",
-                fontSize = 24.sp,
-                glowColor = Purple40,
-                offset = 4f,
-                blurRadius = 4f,
-                textMotion = TextMotion.Animated,
-                toggleOnTap = toggleExploreMode,
-            )
-        }
+        VisualizerStyle.ExpandingGlowyText -> ExpandingGlowyText(
+            modifier = modifier,
+            breathingTechnique = breathingTechnique,
+            toggleExploreMode = toggleExploreMode
+        )
 
         else -> Text(text = "Visualizer not yet implemented.")
     }
@@ -202,6 +174,44 @@ fun ExploreMode(modifier: Modifier = Modifier) {
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Right Arrow")
         }
     }
+}
+
+@Composable
+fun ExpandingGlowyText(
+    modifier: Modifier = Modifier,
+    breathingTechnique: BreathingTechnique,
+    toggleExploreMode: Modifier.() -> Modifier
+) {
+    val infiniteTransition = rememberInfiniteTransition()
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1F,
+        targetValue = 2F,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000,
+                easing = LinearEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    fun Modifier.scaleTransform() = this.graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+        transformOrigin = TransformOrigin.Center
+    }
+
+    GlowyText(
+        modifier = modifier
+            .scaleTransform(),
+        text = "Breathe.",
+        fontSize = 24.sp,
+        glowColor = Purple40,
+        offset = 4f,
+        blurRadius = 4f,
+        textMotion = TextMotion.Animated,
+        toggleOnTap = toggleExploreMode,
+    )
 }
 
 @Composable
