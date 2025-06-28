@@ -67,6 +67,12 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+                    var visualizerStyle: VisualizerStyle by remember {
+                        mutableStateOf(
+                            VisualizerStyle.ExpandingGlowyText
+                        )
+                    }
+
                     val interactionSource = remember { MutableInteractionSource() }
 
                     fun Modifier.toggleExploreMode() = this.toggleable(
@@ -99,6 +105,7 @@ class MainActivity : ComponentActivity() {
                         BreathingVisualizer(
                             modifier = Modifier.align(Alignment.Center),
                             breathingTechnique = breathingTechnique,
+                            visualizerStyle = visualizerStyle,
                             toggleExploreMode = Modifier::toggleExploreMode,
                         )
 
@@ -130,7 +137,10 @@ class MainActivity : ComponentActivity() {
                             enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
                             exit = fadeOut(tween(durationMillis = 1000))
                         ) {
-                            ExploreMode()
+                            ExploreMode(
+                                onNext = { visualizerStyle = visualizerStyle.next() },
+                                onPrev = { visualizerStyle = visualizerStyle.prev() }
+                            )
                         }
                     }
                 }
@@ -161,7 +171,7 @@ fun BreathingVisualizer(
 }
 
 @Composable
-fun ExploreMode(modifier: Modifier = Modifier) {
+fun ExploreMode(modifier: Modifier = Modifier, onNext: () -> Unit, onPrev: () -> Unit) {
 
     Row(
         modifier = modifier
@@ -169,10 +179,10 @@ fun ExploreMode(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = {}) {
+        IconButton(onClick = onNext) {
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Left Arrow")
         }
-        IconButton(onClick = {}) {
+        IconButton(onClick = onPrev) {
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Right Arrow")
         }
     }
