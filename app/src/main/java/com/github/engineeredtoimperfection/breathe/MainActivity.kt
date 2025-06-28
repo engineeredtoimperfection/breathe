@@ -154,7 +154,9 @@ fun BreathingVisualizer(
             toggleExploreMode = toggleExploreMode
         )
 
-        else -> Text(text = "Visualizer not yet implemented.")
+        VisualizerStyle.PulsatingCircle -> Text(text = "PulsatingCircle visualizer not yet implemented.")
+
+        VisualizerStyle.NeonBoxLines -> Text(text = "NeonBoxLines visualizer not yet implemented.")
     }
 }
 
