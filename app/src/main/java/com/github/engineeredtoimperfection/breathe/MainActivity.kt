@@ -153,7 +153,7 @@ class MainActivity : ComponentActivity() {
 fun BreathingVisualizer(
     modifier: Modifier = Modifier,
     breathingTechnique: BreathingTechnique,
-    visualizerStyle: VisualizerStyle = VisualizerStyle.ExpandingGlowyText,
+    visualizerStyle: VisualizerStyle,
     toggleExploreMode: Modifier.() -> Modifier
 ) {
     when (visualizerStyle) {
@@ -164,9 +164,15 @@ fun BreathingVisualizer(
             toggleExploreMode = toggleExploreMode
         )
 
-        VisualizerStyle.PulsatingCircle -> Text(text = "PulsatingCircle visualizer not yet implemented.")
+        VisualizerStyle.PulsatingCircle -> Text(
+            text = "PulsatingCircle visualizer not yet implemented.",
+            modifier = modifier
+        )
 
-        VisualizerStyle.NeonBoxLines -> Text(text = "NeonBoxLines visualizer not yet implemented.")
+        VisualizerStyle.NeonBoxLines -> Text(
+            text = "NeonBoxLines visualizer not yet implemented.",
+            modifier = modifier
+        )
     }
 }
 
