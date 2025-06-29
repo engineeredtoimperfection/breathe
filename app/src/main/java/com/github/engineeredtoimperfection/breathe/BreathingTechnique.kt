@@ -12,7 +12,7 @@ sealed class BreathingTechnique(
             inhaleForSeconds = 4,
             afterInhalePause = 0,
             exhaleForSeconds = 4,
-            afterExhalePause = 4
+            afterExhalePause = 0
         )
     )
 
