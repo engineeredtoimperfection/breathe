@@ -6,11 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -33,6 +30,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.engineeredtoimperfection.breathe.ui.theme.BreatheTheme
 import com.github.engineeredtoimperfection.breathe.ui.theme.Purple40
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -200,22 +199,35 @@ fun ExpandingGlowyText(
     breathingTechnique: BreathingTechnique,
     toggleExploreMode: Modifier.() -> Modifier
 ) {
-    val infiniteTransition = rememberInfiniteTransition()
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1F,
-        targetValue = 2F,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = breathingTechnique.timingPattern.inhaleForSeconds * 1000,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
+
+    val scaleAnimation = remember { Animatable(1F) }
+
+    LaunchedEffect(Unit) {
+        with(breathingTechnique.timingPattern) {
+            repeat(times = 5) {
+                scaleAnimation.animateTo(
+                    targetValue = 2F,
+                    animationSpec = tween(
+                        durationMillis = inhaleForSeconds * 1000,
+                        easing = LinearEasing
+                    )
+                )
+                delay(timeMillis = afterInhalePause * 1000L)
+                scaleAnimation.animateTo(
+                    targetValue = 1F,
+                    animationSpec = tween(
+                        durationMillis = exhaleForSeconds * 1000,
+                        easing = LinearEasing
+                    )
+                )
+                delay(timeMillis = afterExhalePause * 1000L)
+            }
+        }
+    }
 
     fun Modifier.scaleTransform() = this.graphicsLayer {
-        scaleX = scale
-        scaleY = scale
+        scaleX = scaleAnimation.value
+        scaleY = scaleAnimation.value
         transformOrigin = TransformOrigin.Center
     }
 
