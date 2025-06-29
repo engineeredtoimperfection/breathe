@@ -202,7 +202,7 @@ fun ExpandingGlowyText(
 
     val scaleAnimation = remember { Animatable(1F) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(breathingTechnique) {
         with(breathingTechnique.timingPattern) {
             repeat(times = 5) {
                 scaleAnimation.animateTo(
