@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -202,6 +204,32 @@ fun ExpandingGlowyText(
 
     val scaleAnimation = remember(breathingTechnique) { Animatable(1F) }
 
+    LaunchExpandingAnimation(breathingTechnique, scaleAnimation)
+
+    fun Modifier.scaleTransform() = this.graphicsLayer {
+        scaleX = scaleAnimation.value
+        scaleY = scaleAnimation.value
+        transformOrigin = TransformOrigin.Center
+    }
+
+    GlowyText(
+        modifier = modifier
+            .scaleTransform(),
+        text = "Breathe.",
+        fontSize = 24.sp,
+        glowColor = Purple40,
+        offset = 4f,
+        blurRadius = 4f,
+        textMotion = TextMotion.Animated,
+        toggleOnTap = toggleExploreMode,
+    )
+}
+
+@Composable
+private fun LaunchExpandingAnimation(
+    breathingTechnique: BreathingTechnique,
+    scaleAnimation: Animatable<Float, AnimationVector1D>
+) {
     LaunchedEffect(breathingTechnique) {
         with(breathingTechnique.timingPattern) {
             repeat(times = 5) {
@@ -224,24 +252,6 @@ fun ExpandingGlowyText(
             }
         }
     }
-
-    fun Modifier.scaleTransform() = this.graphicsLayer {
-        scaleX = scaleAnimation.value
-        scaleY = scaleAnimation.value
-        transformOrigin = TransformOrigin.Center
-    }
-
-    GlowyText(
-        modifier = modifier
-            .scaleTransform(),
-        text = "Breathe.",
-        fontSize = 24.sp,
-        glowColor = Purple40,
-        offset = 4f,
-        blurRadius = 4f,
-        textMotion = TextMotion.Animated,
-        toggleOnTap = toggleExploreMode,
-    )
 }
 
 @Composable
