@@ -200,7 +200,7 @@ fun ExpandingGlowyText(
     toggleExploreMode: Modifier.() -> Modifier
 ) {
 
-    val scaleAnimation = remember { Animatable(1F) }
+    val scaleAnimation = remember(breathingTechnique) { Animatable(1F) }
 
     LaunchedEffect(breathingTechnique) {
         with(breathingTechnique.timingPattern) {
