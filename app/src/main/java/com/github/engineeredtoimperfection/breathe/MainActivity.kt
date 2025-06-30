@@ -8,7 +8,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
-import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
@@ -108,7 +106,9 @@ class MainActivity : ComponentActivity() {
                         }
 
                         BreathingVisualizer(
-                            modifier = Modifier.align(Alignment.Center).widthIn(max = 200.dp),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .widthIn(max = 200.dp),
                             breathingTechnique = breathingTechnique,
                             visualizerStyle = visualizerStyle,
                             toggleExploreMode = Modifier::toggleExploreMode,
@@ -169,10 +169,10 @@ fun BreathingVisualizer(
             toggleExploreMode = toggleExploreMode
         )
 
-        VisualizerStyle.PulsatingCircle -> Text(
-            text = "PulsatingCircle visualizer not yet implemented.",
-            textAlign = TextAlign.Center,
-            modifier = modifier
+        VisualizerStyle.PulsatingCircle -> PulsatingCircle(
+            modifier = modifier,
+            breathingTechnique = breathingTechnique,
+            toggleExploreMode = toggleExploreMode
         )
 
         VisualizerStyle.NeonBoxLines -> Text(
@@ -229,6 +229,19 @@ fun ExpandingGlowyText(
         blurRadius = 4f,
         textMotion = TextMotion.Animated,
         toggleOnTap = toggleExploreMode,
+    )
+}
+
+@Composable
+fun PulsatingCircle(
+    modifier: Modifier = Modifier,
+    breathingTechnique: BreathingTechnique,
+    toggleExploreMode: Modifier.() -> Modifier
+) {
+    Text(
+        text = "PulsatingCircle visualizer not yet implemented.",
+        textAlign = TextAlign.Center,
+        modifier = modifier
     )
 }
 
