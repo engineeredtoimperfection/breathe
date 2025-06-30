@@ -1,11 +1,13 @@
 package com.github.engineeredtoimperfection.breathe
 
 sealed class BreathingTechnique(
+    val id: Int,
     val name: String,
     val description: String,
     val timingPattern: TimingPattern
 ) {
     object EqualBreathing : BreathingTechnique(
+        id = 0,
         name = "Equal Breathing",
         description = "Helps steady your focus and keep you centered. Good for staying mentally clear during work or meditation.",
         timingPattern = TimingPattern(
@@ -17,6 +19,7 @@ sealed class BreathingTechnique(
     )
 
     object BoxBreathing : BreathingTechnique(
+        id = 1,
         name = "Box Breathing",
         description = "Helps calm your nerves and regain control under pressure. Great for anxiety or stressful situations where you need to stay sharp.",
         timingPattern = TimingPattern(
@@ -28,6 +31,7 @@ sealed class BreathingTechnique(
     )
 
     object FourSevenEightBreathing : BreathingTechnique(
+        id = 2,
         name = "4-7-8 Breathing",
         description = "Helps slow your body down and trigger deep relaxation. Suitable for falling asleep or unwinding after a long day.",
         timingPattern = TimingPattern(
@@ -39,6 +43,7 @@ sealed class BreathingTechnique(
     )
 
     object BellyBreathing : BreathingTechnique(
+        id = 3,
         name = "Belly Breathing",
         description = "Helps relax physical tension and settle your body. Good for daily practice or moments when you feel disconnected or overstimulated.",
         timingPattern = TimingPattern(
@@ -52,6 +57,7 @@ sealed class BreathingTechnique(
     fun next(): BreathingTechnique {
         val breathingTechniques =
             BreathingTechnique::class.sealedSubclasses.mapNotNull { it.objectInstance }
+                .sortedBy { it.id }
         val nextTechniqueIndex = (breathingTechniques.indexOf(this) + 1) % breathingTechniques.size
         return breathingTechniques[nextTechniqueIndex]
     }
