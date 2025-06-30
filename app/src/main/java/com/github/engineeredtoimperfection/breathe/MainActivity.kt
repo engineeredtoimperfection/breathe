@@ -193,10 +193,10 @@ fun ExploreMode(modifier: Modifier = Modifier, onNext: () -> Unit, onPrev: () ->
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = onNext) {
+        IconButton(onClick = onPrev) {
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Left Arrow")
         }
-        IconButton(onClick = onPrev) {
+        IconButton(onClick = onNext) {
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Right Arrow")
         }
     }
