@@ -1,7 +1,5 @@
 package com.github.engineeredtoimperfection.breathe
 
-import kotlin.math.abs
-
 sealed class VisualizerStyle {
     object ExpandingGlowyText : VisualizerStyle()
     object PulsatingCircle : VisualizerStyle()
@@ -17,7 +15,9 @@ sealed class VisualizerStyle {
     fun prev(): VisualizerStyle {
         val visualizerStyles =
             VisualizerStyle::class.sealedSubclasses.mapNotNull { it.objectInstance }
-        val nextStyleIndex = abs((visualizerStyles.indexOf(this) - 1)) % visualizerStyles.size
+        val nextIndexUnbounded = visualizerStyles.indexOf(this) - 1
+        val nextStyleIndex =
+            if (nextIndexUnbounded < 0) visualizerStyles.size - 1 else nextIndexUnbounded % visualizerStyles.size
         return visualizerStyles[nextStyleIndex]
     }
 }
