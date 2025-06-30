@@ -56,7 +56,7 @@ sealed class BreathingTechnique(
 
     fun next(): BreathingTechnique {
         val breathingTechniques =
-            BreathingTechnique::class.sealedSubclasses.mapNotNull { it.objectInstance }
+            listOfObjectsInSealedClass<BreathingTechnique>()
                 .sortedBy { it.id }
         val nextTechniqueIndex = (breathingTechniques.indexOf(this) + 1) % breathingTechniques.size
         return breathingTechniques[nextTechniqueIndex]
