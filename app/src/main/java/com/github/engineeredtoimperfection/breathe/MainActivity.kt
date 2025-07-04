@@ -19,6 +19,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -243,7 +244,8 @@ fun PulsatingCircle(
     radiusDenominatorAtEnd: Float = 2F
 ) {
 
-    val radiusDenominatorAnimation = remember(breathingTechnique) { Animatable(radiusDenominatorAtStart) }
+    val radiusDenominatorAnimation =
+        remember(breathingTechnique) { Animatable(radiusDenominatorAtStart) }
 
     LaunchPulsatingAnimation(
         breathingTechnique = breathingTechnique,
@@ -297,7 +299,8 @@ private fun Circle(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .fillMaxHeight(0.5f)
             .drawBehind {
 
                 val radius = size.width / radiusDenominator.value
