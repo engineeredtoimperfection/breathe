@@ -44,13 +44,11 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextMotion
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -242,18 +240,45 @@ fun PulsatingCircle(
     breathingTechnique: BreathingTechnique,
     toggleExploreMode: Modifier.() -> Modifier
 ) {
-    Circle(modifier = modifier)
+    val addedRadius = remember(breathingTechnique) { Animatable(0F) }
+
+    LaunchedEffect(breathingTechnique) {
+        with(breathingTechnique.timingPattern) {
+            repeat(times = 5) {
+                addedRadius.animateTo(
+                    targetValue = 50F,
+                    animationSpec = tween(
+                        durationMillis = inhaleForSeconds * 1000,
+                        easing = LinearEasing
+                    )
+                )
+                delay(timeMillis = afterInhalePause * 1000L)
+                addedRadius.animateTo(
+                    targetValue = 0F,
+                    animationSpec = tween(
+                        durationMillis = exhaleForSeconds * 1000,
+                        easing = LinearEasing
+                    )
+                )
+                delay(timeMillis = afterExhalePause * 1000L)
+            }
+        }
+    }
+    Circle(modifier = modifier, addedRadius = addedRadius, toggleOnTap = toggleExploreMode)
 }
 
-@Preview
 @Composable
-private fun Circle(modifier: Modifier = Modifier) {
+private fun Circle(
+    modifier: Modifier = Modifier,
+    addedRadius: Animatable<Float, AnimationVector1D>,
+    toggleOnTap: Modifier.() -> Modifier
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .drawBehind {
 
-                val radius = size.width / 2.5f
+                val radius = size.width / 2.5f + addedRadius.value
 
                 drawCircle(
                     color = Purple40,
@@ -261,6 +286,7 @@ private fun Circle(modifier: Modifier = Modifier) {
                     style = Stroke(width = 5f)
                 )
             }
+            .toggleOnTap()
     )
 }
 
