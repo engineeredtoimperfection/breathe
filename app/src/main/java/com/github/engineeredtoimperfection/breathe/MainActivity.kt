@@ -238,23 +238,46 @@ fun ExpandingGlowyText(
 fun PulsatingCircle(
     modifier: Modifier = Modifier,
     breathingTechnique: BreathingTechnique,
-    toggleExploreMode: Modifier.() -> Modifier
+    toggleExploreMode: Modifier.() -> Modifier,
+    radiusDenominatorAtStart: Float = 2.5F,
+    radiusDenominatorAtEnd: Float = 2F
 ) {
-    val radiusDenominator = remember(breathingTechnique) { Animatable(2.5F) }
 
+    val radiusDenominatorAnimation = remember(breathingTechnique) { Animatable(radiusDenominatorAtStart) }
+
+    LaunchPulsatingAnimation(
+        breathingTechnique = breathingTechnique,
+        radiusDenominatorAnimation = radiusDenominatorAnimation,
+        startValue = radiusDenominatorAtStart,
+        endValue = radiusDenominatorAtEnd
+    )
+
+    Circle(
+        modifier = modifier,
+        radiusDenominator = radiusDenominatorAnimation,
+        toggleOnTap = toggleExploreMode
+    )
+}
+
+@Composable
+private fun LaunchPulsatingAnimation(
+    breathingTechnique: BreathingTechnique,
+    radiusDenominatorAnimation: Animatable<Float, AnimationVector1D>,
+    startValue: Float, endValue: Float,
+) {
     LaunchedEffect(breathingTechnique) {
         with(breathingTechnique.timingPattern) {
             repeat(times = 5) {
-                radiusDenominator.animateTo(
-                    targetValue = 2F,
+                radiusDenominatorAnimation.animateTo(
+                    targetValue = endValue,
                     animationSpec = tween(
                         durationMillis = inhaleForSeconds * 1000,
                         easing = LinearEasing
                     )
                 )
                 delay(timeMillis = afterInhalePause * 1000L)
-                radiusDenominator.animateTo(
-                    targetValue = 2.5F,
+                radiusDenominatorAnimation.animateTo(
+                    targetValue = startValue,
                     animationSpec = tween(
                         durationMillis = exhaleForSeconds * 1000,
                         easing = LinearEasing
@@ -264,7 +287,6 @@ fun PulsatingCircle(
             }
         }
     }
-    Circle(modifier = modifier, radiusDenominator = radiusDenominator, toggleOnTap = toggleExploreMode)
 }
 
 @Composable
