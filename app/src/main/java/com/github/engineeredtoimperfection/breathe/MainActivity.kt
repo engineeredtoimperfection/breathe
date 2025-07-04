@@ -240,21 +240,21 @@ fun PulsatingCircle(
     breathingTechnique: BreathingTechnique,
     toggleExploreMode: Modifier.() -> Modifier
 ) {
-    val addedRadius = remember(breathingTechnique) { Animatable(0F) }
+    val radiusDenominator = remember(breathingTechnique) { Animatable(2.5F) }
 
     LaunchedEffect(breathingTechnique) {
         with(breathingTechnique.timingPattern) {
             repeat(times = 5) {
-                addedRadius.animateTo(
-                    targetValue = 50F,
+                radiusDenominator.animateTo(
+                    targetValue = 2F,
                     animationSpec = tween(
                         durationMillis = inhaleForSeconds * 1000,
                         easing = LinearEasing
                     )
                 )
                 delay(timeMillis = afterInhalePause * 1000L)
-                addedRadius.animateTo(
-                    targetValue = 0F,
+                radiusDenominator.animateTo(
+                    targetValue = 2.5F,
                     animationSpec = tween(
                         durationMillis = exhaleForSeconds * 1000,
                         easing = LinearEasing
@@ -264,13 +264,13 @@ fun PulsatingCircle(
             }
         }
     }
-    Circle(modifier = modifier, addedRadius = addedRadius, toggleOnTap = toggleExploreMode)
+    Circle(modifier = modifier, radiusDenominator = radiusDenominator, toggleOnTap = toggleExploreMode)
 }
 
 @Composable
 private fun Circle(
     modifier: Modifier = Modifier,
-    addedRadius: Animatable<Float, AnimationVector1D>,
+    radiusDenominator: Animatable<Float, AnimationVector1D>,
     toggleOnTap: Modifier.() -> Modifier
 ) {
     Box(
@@ -278,7 +278,7 @@ private fun Circle(
             .fillMaxSize()
             .drawBehind {
 
-                val radius = size.width / 2.5f + addedRadius.value
+                val radius = size.width / radiusDenominator.value
 
                 drawCircle(
                     color = Purple40,
