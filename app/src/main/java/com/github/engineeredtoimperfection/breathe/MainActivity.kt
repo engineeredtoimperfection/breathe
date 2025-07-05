@@ -308,7 +308,7 @@ private fun Circle(
                 drawCircle(
                     color = Purple40,
                     radius = radius,
-                    style = Stroke(width = 5f)
+                    style = Stroke(width = 10f)
                 )
             }
             .toggleOnTap()
