@@ -28,6 +28,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -61,6 +62,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        createRemindersNotificationChannel(this)
+
         setContent {
             BreatheTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -149,6 +153,10 @@ class MainActivity : ComponentActivity() {
                                 onNext = { visualizerStyle = visualizerStyle.next() },
                                 onPrev = { visualizerStyle = visualizerStyle.prev() }
                             )
+
+                            Button(onClick = { sendReminderNotification(this@MainActivity) }) {
+                                Text("Hello")
+                            }
                         }
                     }
                 }
