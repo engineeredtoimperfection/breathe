@@ -155,7 +155,7 @@ class MainActivity : ComponentActivity() {
                             )
 
                             Button(onClick = { sendReminderNotification(this@MainActivity) }) {
-                                Text("Hello")
+                                Text("Send Reminder Demo")
                             }
                         }
                     }
