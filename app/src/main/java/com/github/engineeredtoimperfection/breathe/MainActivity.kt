@@ -101,11 +101,9 @@ class MainActivity : ComponentActivity() {
                             enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
                             exit = fadeOut(tween(durationMillis = 1000))
                         ) {
-                            Text(
-                                text = breathingTechnique.name,
-                                modifier = Modifier.clickable {
-                                    breathingTechnique = breathingTechnique.next()
-                                }
+                            BreathingTechniqueLabel(
+                                breathingTechnique = breathingTechnique,
+                                onNext = { breathingTechnique = breathingTechnique.next() }
                             )
                         }
 
@@ -144,6 +142,14 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Composable
+fun BreathingTechniqueLabel(modifier: Modifier = Modifier, breathingTechnique: BreathingTechnique, onNext: () -> Unit) {
+    Text(
+        text = breathingTechnique.name,
+        modifier = Modifier.clickable(onClick = onNext)
+    )
 }
 
 @Composable
