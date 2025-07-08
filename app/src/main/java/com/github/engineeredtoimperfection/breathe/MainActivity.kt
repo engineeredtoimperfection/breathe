@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.LinearEasing
@@ -16,6 +18,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -95,17 +98,17 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
-                        AnimatedVisibility(
+                        ExploreMode(
                             visible = isModeExplore,
-                            modifier = Modifier.align(Alignment.TopCenter),
                             enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
-                            exit = fadeOut(tween(durationMillis = 1000))
-                        ) {
-                            BreathingTechniqueLabel(
-                                breathingTechnique = breathingTechnique,
-                                onNext = { breathingTechnique = breathingTechnique.next() }
-                            )
-                        }
+                            exit = fadeOut(tween(durationMillis = 1000)),
+                            breathingTechnique = breathingTechnique,
+                            onNextBreathingTechnique = {
+                                breathingTechnique = breathingTechnique.next()
+                            },
+                            onNextVisualizer = { visualizerStyle = visualizerStyle.next() },
+                            onPrevVisualizer = { visualizerStyle = visualizerStyle.prev() }
+                        )
 
                         BreathingVisualizer(
                             modifier = Modifier
@@ -116,31 +119,53 @@ class MainActivity : ComponentActivity() {
                             toggleExploreMode = Modifier::toggleExploreMode,
                             onCompleteBreathingExercise = { sendReminderNotification(this@MainActivity) }
                         )
-
-                        AnimatedVisibility(
-                            visible = isModeExplore,
-                            modifier = Modifier.align(Alignment.Center),
-                            enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
-                            exit = fadeOut(tween(durationMillis = 1000))
-                        ) {
-                            ExploreModeHorizontalArrows(
-                                onNext = { visualizerStyle = visualizerStyle.next() },
-                                onPrev = { visualizerStyle = visualizerStyle.prev() }
-                            )
-                        }
-
-                        AnimatedVisibility(
-                            visible = isModeExplore,
-                            modifier = Modifier.align(Alignment.BottomCenter),
-                            enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
-                            exit = fadeOut(tween(durationMillis = 1000))
-                        ) {
-                            ExploreModeLabel()
-                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun BoxScope.ExploreMode(
+    visible: Boolean,
+    enter: EnterTransition,
+    exit: ExitTransition,
+    breathingTechnique: BreathingTechnique, onNextBreathingTechnique: () -> Unit,
+    onNextVisualizer: () -> Unit,
+    onPrevVisualizer: () -> Unit,
+) {
+    AnimatedVisibility(
+        visible = visible,
+        modifier = Modifier.align(Alignment.TopCenter),
+        enter = enter,
+        exit = exit
+    ) {
+        BreathingTechniqueLabel(
+            breathingTechnique = breathingTechnique,
+            onNext = onNextBreathingTechnique
+        )
+    }
+
+    AnimatedVisibility(
+        visible = visible,
+        modifier = Modifier.align(Alignment.Center),
+        enter = enter,
+        exit = exit
+    ) {
+        ExploreModeHorizontalArrows(
+            onNext = onNextVisualizer,
+            onPrev = onPrevVisualizer
+        )
+    }
+
+    AnimatedVisibility(
+        visible = visible,
+        modifier = Modifier.align(Alignment.BottomCenter),
+        enter = enter,
+        exit = exit
+    ) {
+        ExploreModeLabel()
     }
 }
 
@@ -152,7 +177,7 @@ fun BreathingTechniqueLabel(
 ) {
     Text(
         text = breathingTechnique.name,
-        modifier = Modifier.clickable(onClick = onNext)
+        modifier = modifier.clickable(onClick = onNext)
     )
 }
 
@@ -213,7 +238,7 @@ fun ExploreModeHorizontalArrows(
 
 @Composable
 fun ExploreModeLabel(modifier: Modifier = Modifier) {
-    Text("Explore Mode")
+    Text(text = "Explore Mode", modifier = modifier)
 }
 
 @Composable
