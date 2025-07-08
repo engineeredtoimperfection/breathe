@@ -135,7 +135,7 @@ class MainActivity : ComponentActivity() {
                             enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
                             exit = fadeOut(tween(durationMillis = 1000))
                         ) {
-                            Text("Explore Mode")
+                            ExploreModeLabel()
                         }
                     }
                 }
@@ -145,7 +145,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BreathingTechniqueLabel(modifier: Modifier = Modifier, breathingTechnique: BreathingTechnique, onNext: () -> Unit) {
+fun BreathingTechniqueLabel(
+    modifier: Modifier = Modifier,
+    breathingTechnique: BreathingTechnique,
+    onNext: () -> Unit
+) {
     Text(
         text = breathingTechnique.name,
         modifier = Modifier.clickable(onClick = onNext)
@@ -186,7 +190,11 @@ fun BreathingVisualizer(
 }
 
 @Composable
-fun ExploreModeHorizontalArrows(modifier: Modifier = Modifier, onNext: () -> Unit, onPrev: () -> Unit) {
+fun ExploreModeHorizontalArrows(
+    modifier: Modifier = Modifier,
+    onNext: () -> Unit,
+    onPrev: () -> Unit
+) {
 
     Row(
         modifier = modifier
@@ -201,6 +209,11 @@ fun ExploreModeHorizontalArrows(modifier: Modifier = Modifier, onNext: () -> Uni
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Right Arrow")
         }
     }
+}
+
+@Composable
+fun ExploreModeLabel(modifier: Modifier = Modifier) {
+    Text("Explore Mode")
 }
 
 @Composable
