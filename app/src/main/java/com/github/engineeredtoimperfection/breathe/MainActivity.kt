@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
@@ -12,7 +11,6 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -127,7 +125,7 @@ class MainActivity : ComponentActivity() {
                             enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
                             exit = fadeOut(tween(durationMillis = 1000))
                         ) {
-                            ExploreMode(
+                            ExploreModeHorizontalArrows(
                                 onNext = { visualizerStyle = visualizerStyle.next() },
                                 onPrev = { visualizerStyle = visualizerStyle.prev() }
                             )
@@ -182,7 +180,7 @@ fun BreathingVisualizer(
 }
 
 @Composable
-fun ExploreMode(modifier: Modifier = Modifier, onNext: () -> Unit, onPrev: () -> Unit) {
+fun ExploreModeHorizontalArrows(modifier: Modifier = Modifier, onNext: () -> Unit, onPrev: () -> Unit) {
 
     Row(
         modifier = modifier
