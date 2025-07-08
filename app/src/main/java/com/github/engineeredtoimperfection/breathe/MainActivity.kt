@@ -28,7 +28,6 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -119,6 +118,7 @@ class MainActivity : ComponentActivity() {
                             breathingTechnique = breathingTechnique,
                             visualizerStyle = visualizerStyle,
                             toggleExploreMode = Modifier::toggleExploreMode,
+                            onCompleteBreathingExercise = { sendReminderNotification(this@MainActivity) }
                         )
 
                         AnimatedContent(
@@ -153,10 +153,6 @@ class MainActivity : ComponentActivity() {
                                 onNext = { visualizerStyle = visualizerStyle.next() },
                                 onPrev = { visualizerStyle = visualizerStyle.prev() }
                             )
-
-                            Button(onClick = { sendReminderNotification(this@MainActivity) }) {
-                                Text("Send Reminder Demo")
-                            }
                         }
                     }
                 }
@@ -170,20 +166,23 @@ fun BreathingVisualizer(
     modifier: Modifier = Modifier,
     breathingTechnique: BreathingTechnique,
     visualizerStyle: VisualizerStyle,
-    toggleExploreMode: Modifier.() -> Modifier
+    toggleExploreMode: Modifier.() -> Modifier,
+    onCompleteBreathingExercise: () -> Unit,
 ) {
     when (visualizerStyle) {
 
         VisualizerStyle.ExpandingGlowyText -> ExpandingGlowyText(
             modifier = modifier,
             breathingTechnique = breathingTechnique,
-            toggleExploreMode = toggleExploreMode
+            toggleExploreMode = toggleExploreMode,
+            onCompleteBreathingExercise = onCompleteBreathingExercise
         )
 
         VisualizerStyle.PulsatingCircle -> PulsatingCircle(
             modifier = modifier,
             breathingTechnique = breathingTechnique,
-            toggleExploreMode = toggleExploreMode
+            toggleExploreMode = toggleExploreMode,
+            onCompleteBreathingExercise = onCompleteBreathingExercise
         )
 
         VisualizerStyle.NeonBoxLines -> Text(
@@ -217,12 +216,13 @@ fun ExploreMode(modifier: Modifier = Modifier, onNext: () -> Unit, onPrev: () ->
 fun ExpandingGlowyText(
     modifier: Modifier = Modifier,
     breathingTechnique: BreathingTechnique,
-    toggleExploreMode: Modifier.() -> Modifier
+    toggleExploreMode: Modifier.() -> Modifier,
+    onCompleteBreathingExercise: () -> Unit
 ) {
 
     val scaleAnimation = remember(breathingTechnique) { Animatable(1F) }
 
-    LaunchExpandingAnimation(breathingTechnique, scaleAnimation)
+    LaunchExpandingAnimation(breathingTechnique, scaleAnimation, onCompleteBreathingExercise)
 
     fun Modifier.scaleTransform() = this.graphicsLayer {
         scaleX = scaleAnimation.value
@@ -249,7 +249,8 @@ fun PulsatingCircle(
     breathingTechnique: BreathingTechnique,
     toggleExploreMode: Modifier.() -> Modifier,
     radiusDenominatorAtStart: Float = 2.5F,
-    radiusDenominatorAtEnd: Float = 2F
+    radiusDenominatorAtEnd: Float = 2F,
+    onCompleteBreathingExercise: () -> Unit
 ) {
 
     val radiusDenominatorAnimation =
@@ -259,7 +260,8 @@ fun PulsatingCircle(
         breathingTechnique = breathingTechnique,
         radiusDenominatorAnimation = radiusDenominatorAnimation,
         startValue = radiusDenominatorAtStart,
-        endValue = radiusDenominatorAtEnd
+        endValue = radiusDenominatorAtEnd,
+        onFinish = onCompleteBreathingExercise
     )
 
     Circle(
@@ -274,6 +276,7 @@ private fun LaunchPulsatingAnimation(
     breathingTechnique: BreathingTechnique,
     radiusDenominatorAnimation: Animatable<Float, AnimationVector1D>,
     startValue: Float, endValue: Float,
+    onFinish: () -> Unit
 ) {
     LaunchedEffect(breathingTechnique) {
         with(breathingTechnique.timingPattern) {
@@ -295,6 +298,7 @@ private fun LaunchPulsatingAnimation(
                 )
                 delay(timeMillis = afterExhalePause * 1000L)
             }
+            onFinish()
         }
     }
 }
@@ -326,7 +330,8 @@ private fun Circle(
 @Composable
 private fun LaunchExpandingAnimation(
     breathingTechnique: BreathingTechnique,
-    scaleAnimation: Animatable<Float, AnimationVector1D>
+    scaleAnimation: Animatable<Float, AnimationVector1D>,
+    onFinish: () -> Unit
 ) {
     LaunchedEffect(breathingTechnique) {
         with(breathingTechnique.timingPattern) {
@@ -348,6 +353,7 @@ private fun LaunchExpandingAnimation(
                 )
                 delay(timeMillis = afterExhalePause * 1000L)
             }
+            onFinish()
         }
     }
 }
