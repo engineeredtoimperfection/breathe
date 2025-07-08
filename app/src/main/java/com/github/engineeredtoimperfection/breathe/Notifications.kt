@@ -2,6 +2,7 @@ package com.github.engineeredtoimperfection.breathe
 
 import android.Manifest
 import android.app.Activity
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,7 +12,26 @@ import androidx.activity.ComponentActivity.NOTIFICATION_SERVICE
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 
-const val REMINDERS_CHANNEL_ID = "Reminders"
+data class NotificationChannelSettings(
+    val channelID: String,
+    val channelName: String,
+    val description: String,
+    val importance: Int
+) {
+
+    fun toNotificationChannel(): NotificationChannel {
+        return NotificationChannel(channelID, channelName, importance).apply {
+            description = description
+        }
+    }
+}
+
+val remindersNotificationChannelSettings = NotificationChannelSettings(
+    channelID = "Reminders",
+    channelName = "Gentle Reminders",
+    description = "Gentle nudges to keep you calm and relaxed.",
+    importance = NotificationManager.IMPORTANCE_DEFAULT
+)
 
 fun Activity.notificationManager(): NotificationManager {
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -19,56 +39,68 @@ fun Activity.notificationManager(): NotificationManager {
 }
 
 fun createRemindersNotificationChannel(activity: Activity) {
-    createNotificationChannel(activity, REMINDERS_CHANNEL_ID)
+    createNotificationChannel(activity, remindersNotificationChannelSettings)
 }
 
-fun createNotificationChannel(activity: Activity, channelID: String) {
-    // Create the NotificationChannel.
-    val name = "Gentle Reminders"
-    val descriptionText = "Gentle nudges to keep you calm and relaxed."
-    val importance = NotificationManager.IMPORTANCE_DEFAULT
-    val mChannel = NotificationChannel(channelID, name, importance)
-    mChannel.description = descriptionText
+fun createNotificationChannel(
+    activity: Activity,
+    notificationChannelSettings: NotificationChannelSettings
+) {
+
+    val channel = notificationChannelSettings.toNotificationChannel()
+
     // Register the channel with the system. You can't change the importance
     // or other notification behaviors after this.
-    val notificationManager = activity.notificationManager()
-    notificationManager.createNotificationChannel(mChannel)
+    activity.notificationManager().createNotificationChannel(channel)
 }
 
 fun sendReminderNotification(activity: Activity) {
-    activity.sendNotification(REMINDERS_CHANNEL_ID)
+    val remindersChannelId = remindersNotificationChannelSettings.channelID
+
+    val reminderNotification = activity.createNotification(channelId = remindersChannelId)
+    activity.sendNotification(notification = reminderNotification, notificationId = 0)
 }
 
-fun Activity.sendNotification(channelID: String) {
-    val notificationManager = notificationManager()
-
+fun Activity.createNotification(
+    channelId: String,
+    smallIcon: Int = R.drawable.ic_launcher_new_foreground,
+    contentTitle: String = "Gentle Reminder",
+    contentText: String = "Have you taken a moment to breathe today?"
+): Notification {
     val intent = Intent(this, MainActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
     val pendingIntent: PendingIntent =
         PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-    val notification = NotificationCompat.Builder(this, channelID)
-        .setSmallIcon(R.drawable.ic_launcher_new_foreground)
-        .setContentTitle("Gentle Reminder")
-        .setContentText("Have you taken a moment to breathe today?")
+    val notification = NotificationCompat.Builder(this, channelId)
+        .setSmallIcon(smallIcon)
+        .setContentTitle(contentTitle)
+        .setContentText(contentText)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
 
-    if (ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) != PackageManager.PERMISSION_GRANTED
-    ) {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-            0
-        )
+    return notification.build()
+}
 
-        return
+fun Activity.sendNotification(notification: Notification, notificationId: Int) {
+
+    val isPermissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+    if (!isPermissionGranted) {
+        requestPermissionFromUser()
     }
 
-    notificationManager.notify(0, notification.build())
+    else {
+        notificationManager().notify(notificationId, notification)
+    }
 
+}
+
+fun Activity.requestPermissionFromUser() {
+    ActivityCompat.requestPermissions(
+        this,
+        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+        0
+    )
 }
