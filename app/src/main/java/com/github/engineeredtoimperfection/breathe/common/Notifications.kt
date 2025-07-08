@@ -1,4 +1,4 @@
-package com.github.engineeredtoimperfection.breathe
+package com.github.engineeredtoimperfection.breathe.common
 
 import android.Manifest
 import android.app.Activity
@@ -11,6 +11,8 @@ import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity.NOTIFICATION_SERVICE
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import com.github.engineeredtoimperfection.breathe.MainActivity
+import com.github.engineeredtoimperfection.breathe.R
 
 data class NotificationChannelSettings(
     val channelID: String,
@@ -85,13 +87,14 @@ fun Activity.createNotification(
 
 fun Activity.sendNotification(notification: Notification, notificationId: Int) {
 
-    val isPermissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+    val isPermissionGranted = ActivityCompat.checkSelfPermission(
+        this,
+        Manifest.permission.POST_NOTIFICATIONS
+    ) == PackageManager.PERMISSION_GRANTED
 
     if (!isPermissionGranted) {
         requestPermissionFromUser()
-    }
-
-    else {
+    } else {
         notificationManager().notify(notificationId, notification)
     }
 

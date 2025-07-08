@@ -1,4 +1,6 @@
-package com.github.engineeredtoimperfection.breathe
+package com.github.engineeredtoimperfection.breathe.data
+
+import com.github.engineeredtoimperfection.breathe.common.listOfObjectsInSealedClass
 
 sealed class BreathingTechnique(
     val id: Int,

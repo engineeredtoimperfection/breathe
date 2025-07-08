@@ -54,6 +54,10 @@ import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.engineeredtoimperfection.breathe.common.createRemindersNotificationChannel
+import com.github.engineeredtoimperfection.breathe.common.sendReminderNotification
+import com.github.engineeredtoimperfection.breathe.data.BreathingTechnique
+import com.github.engineeredtoimperfection.breathe.data.VisualizerStyle
 import com.github.engineeredtoimperfection.breathe.ui.theme.BreatheTheme
 import com.github.engineeredtoimperfection.breathe.ui.theme.Purple40
 import kotlinx.coroutines.delay
