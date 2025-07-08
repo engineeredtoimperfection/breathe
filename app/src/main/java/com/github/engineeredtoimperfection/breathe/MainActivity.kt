@@ -121,28 +121,6 @@ class MainActivity : ComponentActivity() {
                             onCompleteBreathingExercise = { sendReminderNotification(this@MainActivity) }
                         )
 
-                        AnimatedContent(
-                            targetState = isModeExplore,
-                            modifier = Modifier.align(Alignment.BottomCenter),
-                            transitionSpec = {
-                                fadeIn(
-                                    tween(
-                                        durationMillis = 1000,
-                                        delayMillis = 1000
-                                    )
-                                ) togetherWith
-                                        fadeOut(tween(durationMillis = 1000))
-                            }
-                        ) { modeState ->
-                            Text(
-                                text =
-                                    if (modeState)
-                                        "Explore Mode"
-                                    else
-                                        "Breathe Mode"
-                            )
-                        }
-
                         AnimatedVisibility(
                             visible = isModeExplore,
                             modifier = Modifier.align(Alignment.Center),
@@ -153,6 +131,15 @@ class MainActivity : ComponentActivity() {
                                 onNext = { visualizerStyle = visualizerStyle.next() },
                                 onPrev = { visualizerStyle = visualizerStyle.prev() }
                             )
+                        }
+
+                        AnimatedVisibility(
+                            visible = isModeExplore,
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            enter = fadeIn(tween(durationMillis = 1000, delayMillis = 1000)),
+                            exit = fadeOut(tween(durationMillis = 1000))
+                        ) {
+                            Text("Explore Mode")
                         }
                     }
                 }
