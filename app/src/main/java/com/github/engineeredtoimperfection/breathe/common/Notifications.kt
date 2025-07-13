@@ -2,17 +2,21 @@ package com.github.engineeredtoimperfection.breathe.common
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity.NOTIFICATION_SERVICE
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.github.engineeredtoimperfection.breathe.MainActivity
 import com.github.engineeredtoimperfection.breathe.R
+import java.util.Calendar
 
 data class NotificationChannelSettings(
     val channelID: String,
@@ -35,7 +39,7 @@ val remindersNotificationChannelSettings = NotificationChannelSettings(
     importance = NotificationManager.IMPORTANCE_DEFAULT
 )
 
-fun Activity.notificationManager(): NotificationManager {
+fun Context.notificationManager(): NotificationManager {
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     return notificationManager
 }
@@ -56,14 +60,14 @@ fun createNotificationChannel(
     activity.notificationManager().createNotificationChannel(channel)
 }
 
-fun sendReminderNotification(activity: Activity) {
+fun sendReminderNotification(context: Context) {
     val remindersChannelId = remindersNotificationChannelSettings.channelID
 
-    val reminderNotification = activity.createNotification(channelId = remindersChannelId)
-    activity.sendNotification(notification = reminderNotification, notificationId = 0)
+    val reminderNotification = context.createNotification(channelId = remindersChannelId)
+    context.sendNotification(notification = reminderNotification, notificationId = 0)
 }
 
-fun Activity.createNotification(
+fun Context.createNotification(
     channelId: String,
     smallIcon: Int = R.drawable.ic_launcher_new_foreground,
     contentTitle: String = "Gentle Reminder",
@@ -85,6 +89,13 @@ fun Activity.createNotification(
     return notification.build()
 }
 
+fun Context.sendNotification(notification: Notification, notificationId: Int) {
+    notificationManager().notify(
+        notificationId,
+        notification
+    )
+}
+
 fun Activity.sendNotification(notification: Notification, notificationId: Int) {
 
     requestPermissionIfNotGranted(
@@ -96,6 +107,33 @@ fun Activity.sendNotification(notification: Notification, notificationId: Int) {
         }
     )
 
+}
+
+fun Activity.scheduleNotificationIfGranted() {
+    if (isPermissionGranted()) {
+        scheduleNotification()
+    }
+}
+
+private fun Activity.scheduleNotification() {
+    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val alarmIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
+        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
+
+    val calendar: Calendar = Calendar.getInstance().apply {
+        timeInMillis = System.currentTimeMillis()
+        set(Calendar.HOUR_OF_DAY, 8)
+    }
+
+    alarmManager.setInexactRepeating(
+        AlarmManager.RTC_WAKEUP,
+        calendar.timeInMillis,
+        AlarmManager.INTERVAL_DAY,
+        alarmIntent
+    )
+
+    Toast.makeText(this, "Scheduled Notifications", Toast.LENGTH_SHORT).show()
 }
 
 fun Activity.requestPermissionIfNotGranted(doIfGranted: () -> Unit = {} ) {

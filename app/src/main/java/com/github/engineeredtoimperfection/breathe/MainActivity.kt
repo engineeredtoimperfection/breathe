@@ -1,5 +1,6 @@
 package com.github.engineeredtoimperfection.breathe
 
+import android.app.PendingIntent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -26,6 +27,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import com.github.engineeredtoimperfection.breathe.common.createRemindersNotificationChannel
 import com.github.engineeredtoimperfection.breathe.common.requestPermissionIfNotGranted
+import com.github.engineeredtoimperfection.breathe.common.scheduleNotificationIfGranted
 import com.github.engineeredtoimperfection.breathe.data.BreathingTechnique
 import com.github.engineeredtoimperfection.breathe.data.EXERCISES_DONE_COUNTER
 import com.github.engineeredtoimperfection.breathe.data.VisualizerStyle
@@ -117,6 +119,8 @@ class MainActivity : ComponentActivity() {
                                     runIfExerciseDoneCountExceeds(3) {
                                         // Show UI instead of directly asking for permission
                                         requestPermissionIfNotGranted()
+
+                                        scheduleNotificationIfGranted()
                                     }
                                 }
                             }
