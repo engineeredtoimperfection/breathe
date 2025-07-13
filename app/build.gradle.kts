@@ -57,4 +57,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(kotlin("reflect"))
+    implementation(libs.androidx.datastore.preferences)
 }

@@ -87,20 +87,31 @@ fun Activity.createNotification(
 
 fun Activity.sendNotification(notification: Notification, notificationId: Int) {
 
-    val isPermissionGranted = ActivityCompat.checkSelfPermission(
-        this,
-        Manifest.permission.POST_NOTIFICATIONS
-    ) == PackageManager.PERMISSION_GRANTED
-
-    if (!isPermissionGranted) {
-        requestPermissionFromUser()
-    } else {
-        notificationManager().notify(notificationId, notification)
-    }
+    requestPermissionIfNotGranted(
+        doIfGranted = {
+            notificationManager().notify(
+                notificationId,
+                notification
+            )
+        }
+    )
 
 }
 
-fun Activity.requestPermissionFromUser() {
+fun Activity.requestPermissionIfNotGranted(doIfGranted: () -> Unit = {} ) {
+    if (!isPermissionGranted()) {
+        requestPermissionFromUser()
+    } else {
+        doIfGranted()
+    }
+}
+
+private fun Activity.isPermissionGranted() = ActivityCompat.checkSelfPermission(
+    this,
+    Manifest.permission.POST_NOTIFICATIONS
+) == PackageManager.PERMISSION_GRANTED
+
+private fun Activity.requestPermissionFromUser() {
     ActivityCompat.requestPermissions(
         this,
         arrayOf(Manifest.permission.POST_NOTIFICATIONS),
