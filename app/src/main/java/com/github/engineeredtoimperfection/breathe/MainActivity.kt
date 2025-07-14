@@ -120,6 +120,12 @@ class MainActivity : ComponentActivity() {
                                         // Show UI instead of directly asking for permission
                                         requestPermissionIfNotGranted()
 
+                                        // This call is unreliable;
+                                        // Should wait for the permission request to be handled before being executed
+                                        //
+                                        // Should also not repeat everytime an exercise is completed;
+                                        // Notifications should only be scheduled if not already scheduled
+                                        // The current scheduled notification's data must be stored somewhere for this
                                         scheduleNotificationIfGranted()
                                     }
                                 }

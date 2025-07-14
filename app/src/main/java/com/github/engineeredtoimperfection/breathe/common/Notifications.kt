@@ -123,11 +123,13 @@ private fun Activity.scheduleNotification() {
 
     val calendar: Calendar = Calendar.getInstance().apply {
         timeInMillis = System.currentTimeMillis()
-        set(Calendar.HOUR_OF_DAY, 8)
+        set(Calendar.HOUR_OF_DAY, 14)
+        set(Calendar.MINUTE, 57)
+        set(Calendar.SECOND, 0)
     }
 
-    alarmManager.setInexactRepeating(
-        AlarmManager.RTC_WAKEUP,
+    alarmManager.setRepeating(
+        AlarmManager.RTC,
         calendar.timeInMillis,
         AlarmManager.INTERVAL_DAY,
         alarmIntent
