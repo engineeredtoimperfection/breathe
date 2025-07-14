@@ -118,17 +118,18 @@ fun Activity.scheduleNotificationIfGranted() {
 private fun Activity.scheduleNotification() {
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val alarmIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
+        intent.action = "com.github.engineeredtoimperfection.breathe.ACTION_GENTLE_NUDGE"
         PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
     val calendar: Calendar = Calendar.getInstance().apply {
         timeInMillis = System.currentTimeMillis()
-        set(Calendar.HOUR_OF_DAY, 14)
-        set(Calendar.MINUTE, 57)
+        set(Calendar.HOUR_OF_DAY, 8)
+        set(Calendar.MINUTE, 0)
         set(Calendar.SECOND, 0)
     }
 
-    alarmManager.setRepeating(
+    alarmManager.setInexactRepeating(
         AlarmManager.RTC,
         calendar.timeInMillis,
         AlarmManager.INTERVAL_DAY,

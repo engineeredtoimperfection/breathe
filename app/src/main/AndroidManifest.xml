@@ -29,7 +29,7 @@
 
         <receiver
             android:name=".common.AlarmReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.github.engineeredtoimperfection.breathe.ACTION_GENTLE_NUDGE" />
             </intent-filter>
