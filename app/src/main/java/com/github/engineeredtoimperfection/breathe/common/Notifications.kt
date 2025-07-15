@@ -19,6 +19,8 @@ import com.github.engineeredtoimperfection.breathe.R
 import com.github.engineeredtoimperfection.breathe.data.markGentleNudgeAsEnabled
 import java.util.Calendar
 
+const val INTENT_ACTION_GENTLE_NUDGE = "com.github.engineeredtoimperfection.breathe.ACTION_GENTLE_NUDGE"
+
 data class NotificationChannelSettings(
     val channelID: String,
     val channelName: String,
@@ -119,7 +121,7 @@ suspend fun Activity.scheduleNotificationIfGranted() {
 private suspend fun Activity.scheduleNotification() {
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val alarmIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
-        intent.action = "com.github.engineeredtoimperfection.breathe.ACTION_GENTLE_NUDGE"
+        intent.action = INTENT_ACTION_GENTLE_NUDGE
         PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
