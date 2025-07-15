@@ -15,6 +15,19 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 val EXERCISES_DONE_COUNTER = intPreferencesKey("exercises_done_counter")
 val GENTLE_NUDGE_ENABLED_KEY = booleanPreferencesKey("gentle_nudge_enabled")
 
+fun Context.exercisesDoneCounterFlow(): Flow<Int> =
+    dataStore.data.map { preferences: Preferences ->
+        preferences[EXERCISES_DONE_COUNTER] ?: 0
+    }
+
+suspend fun Context.runIfExerciseDoneCountExceeds(thresholdCount: Int, block: suspend () -> Unit) {
+    exercisesDoneCounterFlow().collect { exercisesDone ->
+        if (exercisesDone >= thresholdCount) {
+            block()
+        }
+    }
+}
+
 suspend fun Context.countExerciseDone() {
     dataStore.edit { settings ->
         val currentCounterValue = settings[EXERCISES_DONE_COUNTER] ?: 0

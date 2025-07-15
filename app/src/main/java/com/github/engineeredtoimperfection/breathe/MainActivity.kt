@@ -21,22 +21,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import com.github.engineeredtoimperfection.breathe.common.createRemindersNotificationChannel
 import com.github.engineeredtoimperfection.breathe.common.requestPermissionIfNotGranted
 import com.github.engineeredtoimperfection.breathe.common.scheduleNotificationIfGranted
 import com.github.engineeredtoimperfection.breathe.data.BreathingTechnique
-import com.github.engineeredtoimperfection.breathe.data.EXERCISES_DONE_COUNTER
 import com.github.engineeredtoimperfection.breathe.data.VisualizerStyle
 import com.github.engineeredtoimperfection.breathe.data.countExerciseDone
-import com.github.engineeredtoimperfection.breathe.data.dataStore
+import com.github.engineeredtoimperfection.breathe.data.runIfExerciseDoneCountExceeds
 import com.github.engineeredtoimperfection.breathe.data.runIfGentleNudgeDisabled
 import com.github.engineeredtoimperfection.breathe.ui.composable.BreathingVisualizer
 import com.github.engineeredtoimperfection.breathe.ui.composable.ExploreMode
 import com.github.engineeredtoimperfection.breathe.ui.theme.BreatheTheme
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -45,19 +41,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         createRemindersNotificationChannel(this)
-
-        val exercisesDoneCounterFlow: Flow<Int> =
-            dataStore.data.map { preferences: Preferences ->
-                preferences[EXERCISES_DONE_COUNTER] ?: 0
-            }
-
-        suspend fun runIfExerciseDoneCountExceeds(thresholdCount: Int, block: suspend () -> Unit) {
-            exercisesDoneCounterFlow.collect { exercisesDone ->
-                if (exercisesDone >= thresholdCount) {
-                    block()
-                }
-            }
-        }
 
         setContent {
             BreatheTheme {
