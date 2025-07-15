@@ -1,8 +1,6 @@
 package com.github.engineeredtoimperfection.breathe
 
-import android.app.PendingIntent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -33,6 +31,7 @@ import com.github.engineeredtoimperfection.breathe.data.EXERCISES_DONE_COUNTER
 import com.github.engineeredtoimperfection.breathe.data.VisualizerStyle
 import com.github.engineeredtoimperfection.breathe.data.countExerciseDone
 import com.github.engineeredtoimperfection.breathe.data.dataStore
+import com.github.engineeredtoimperfection.breathe.data.runIfGentleNudgeDisabled
 import com.github.engineeredtoimperfection.breathe.ui.composable.BreathingVisualizer
 import com.github.engineeredtoimperfection.breathe.ui.composable.ExploreMode
 import com.github.engineeredtoimperfection.breathe.ui.theme.BreatheTheme
@@ -52,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 preferences[EXERCISES_DONE_COUNTER] ?: 0
             }
 
-        suspend fun runIfExerciseDoneCountExceeds(thresholdCount: Int, block: () -> Unit) {
+        suspend fun runIfExerciseDoneCountExceeds(thresholdCount: Int, block: suspend () -> Unit) {
             exercisesDoneCounterFlow.collect { exercisesDone ->
                 if (exercisesDone >= thresholdCount) {
                     block()
@@ -120,13 +119,12 @@ class MainActivity : ComponentActivity() {
                                         // Show UI instead of directly asking for permission
                                         requestPermissionIfNotGranted()
 
-                                        // This call is unreliable;
-                                        // Should wait for the permission request to be handled before being executed
-                                        //
-                                        // Should also not repeat everytime an exercise is completed;
-                                        // Notifications should only be scheduled if not already scheduled
-                                        // The current scheduled notification's data must be stored somewhere for this
-                                        scheduleNotificationIfGranted()
+                                        // Only schedule notifications if not already enabled AND permission is granted
+                                        runIfGentleNudgeDisabled {
+                                            // This call is unreliable;
+                                            // Need to ensure the permission request is handled before this gets executed
+                                            scheduleNotificationIfGranted()
+                                        }
                                     }
                                 }
                             }

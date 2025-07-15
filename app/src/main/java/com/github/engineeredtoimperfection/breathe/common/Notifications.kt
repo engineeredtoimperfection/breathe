@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.github.engineeredtoimperfection.breathe.MainActivity
 import com.github.engineeredtoimperfection.breathe.R
+import com.github.engineeredtoimperfection.breathe.data.markGentleNudgeAsEnabled
 import java.util.Calendar
 
 data class NotificationChannelSettings(
@@ -109,13 +110,13 @@ fun Activity.sendNotification(notification: Notification, notificationId: Int) {
 
 }
 
-fun Activity.scheduleNotificationIfGranted() {
+suspend fun Activity.scheduleNotificationIfGranted() {
     if (isPermissionGranted()) {
         scheduleNotification()
     }
 }
 
-private fun Activity.scheduleNotification() {
+private suspend fun Activity.scheduleNotification() {
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val alarmIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
         intent.action = "com.github.engineeredtoimperfection.breathe.ACTION_GENTLE_NUDGE"
@@ -137,6 +138,8 @@ private fun Activity.scheduleNotification() {
     )
 
     Toast.makeText(this, "Scheduled Notifications", Toast.LENGTH_SHORT).show()
+
+    markGentleNudgeAsEnabled()
 }
 
 fun Activity.requestPermissionIfNotGranted(doIfGranted: () -> Unit = {} ) {
