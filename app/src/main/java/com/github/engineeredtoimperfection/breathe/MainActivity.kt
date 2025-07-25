@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.engineeredtoimperfection.breathe.common.createRemindersNotificationChannel
 import com.github.engineeredtoimperfection.breathe.common.requestPermissionIfNotGranted
-import com.github.engineeredtoimperfection.breathe.common.scheduleNotificationIfGranted
+import com.github.engineeredtoimperfection.breathe.common.scheduleNotification
 import com.github.engineeredtoimperfection.breathe.data.BreathingTechnique
 import com.github.engineeredtoimperfection.breathe.data.VisualizerStyle
 import com.github.engineeredtoimperfection.breathe.data.countExerciseDone
@@ -99,14 +99,18 @@ class MainActivity : ComponentActivity() {
                                     countExerciseDone()
 
                                     runIfExerciseDoneCountExceeds(3) {
-                                        // Show UI instead of directly asking for permission
-                                        requestPermissionIfNotGranted()
 
-                                        // Only schedule notifications if not already enabled AND permission is granted
-                                        runIfGentleNudgeDisabled {
-                                            // This call is unreliable;
-                                            // Need to ensure the permission request is handled before this gets executed
-                                            scheduleNotificationIfGranted()
+                                        // TODO: Show UI instead of directly asking for permission here
+                                        // Trailing lambda block unreliable;
+                                        //      Need to wait for the permission request dialog before executing the block
+                                        //      Otherwise notification will not be scheduled until one more exercise is completed
+
+                                        requestPermissionIfNotGranted { // Else if permission is already granted
+
+                                            // Only schedule notifications if not already enabled
+                                            runIfGentleNudgeDisabled {
+                                                scheduleNotification()
+                                            }
                                         }
                                     }
                                 }

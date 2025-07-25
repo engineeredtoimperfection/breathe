@@ -99,7 +99,7 @@ fun Context.sendNotification(notification: Notification, notificationId: Int) {
     )
 }
 
-fun Activity.sendNotification(notification: Notification, notificationId: Int) {
+suspend fun Activity.sendNotification(notification: Notification, notificationId: Int) {
 
     requestPermissionIfNotGranted(
         doIfGranted = {
@@ -112,13 +112,7 @@ fun Activity.sendNotification(notification: Notification, notificationId: Int) {
 
 }
 
-suspend fun Activity.scheduleNotificationIfGranted() {
-    if (isPermissionGranted()) {
-        scheduleNotification()
-    }
-}
-
-private suspend fun Activity.scheduleNotification() {
+suspend fun Activity.scheduleNotification() {
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val alarmIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
         intent.action = INTENT_ACTION_GENTLE_NUDGE
@@ -149,7 +143,7 @@ private suspend fun Activity.scheduleNotification() {
     markGentleNudgeAsEnabled()
 }
 
-fun Activity.requestPermissionIfNotGranted(doIfGranted: () -> Unit = {}) {
+suspend fun Activity.requestPermissionIfNotGranted(doIfGranted: suspend () -> Unit = {}) {
     if (!isPermissionGranted()) {
         requestPermissionFromUser()
     } else {
