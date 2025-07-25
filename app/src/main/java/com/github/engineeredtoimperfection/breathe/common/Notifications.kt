@@ -122,7 +122,12 @@ private suspend fun Activity.scheduleNotification() {
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val alarmIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
         intent.action = INTENT_ACTION_GENTLE_NUDGE
-        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getBroadcast(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT // Unsure if FLAG_UPDATE_CURRENT is required; Don't understand how it works
+        )
     }
 
     val calendar: Calendar = Calendar.getInstance().apply {
@@ -144,7 +149,7 @@ private suspend fun Activity.scheduleNotification() {
     markGentleNudgeAsEnabled()
 }
 
-fun Activity.requestPermissionIfNotGranted(doIfGranted: () -> Unit = {} ) {
+fun Activity.requestPermissionIfNotGranted(doIfGranted: () -> Unit = {}) {
     if (!isPermissionGranted()) {
         requestPermissionFromUser()
     } else {
